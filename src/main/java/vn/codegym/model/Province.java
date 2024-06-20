@@ -2,6 +2,14 @@ package vn.codegym.model;
 
 import javax.persistence.*;
 
+/*
+TODO:  - Quản lý tỉnh thành tương tự như quản lý khách hàng. Bao gồm:
+     - Entity Province
+     - Interface IProvinceRepository
+     - ProvinceService
+     - ProvinceController
+     - Và các view cho thực thể Province: list, create, update,...
+* */
 @Entity
 @Table(name = "province")
 public class Province {
