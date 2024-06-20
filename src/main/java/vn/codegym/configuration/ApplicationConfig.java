@@ -45,7 +45,9 @@ import java.util.Properties;
 /*TODO: Su dung CRUD interface*/
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
-/*TODO: Ho tro phan trang*/ public class ApplicationConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+/*TODO: Ho tro phan trang
+ *  Để hỗ trợ cho mapping và sử dụng thì cần bổ sung annotation @EnableSpringDataWebSupport trong file AppConfiguration.*/
+public class ApplicationConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     @Autowired
     private Environment env;
     private ApplicationContext applicationContext;

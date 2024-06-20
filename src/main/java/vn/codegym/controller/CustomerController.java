@@ -1,6 +1,8 @@
 package vn.codegym.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,14 +24,25 @@ public class CustomerController {
     private IProvinceService provinceService;
 
     /*TODO: - Trong lớp CustomerController bổ sung phần code hỗ trợ lấy danh sách tỉnh trong các request tới controller như sau:
-     * */
+            @ModelAttribute
+            Để ở ngoài nhằm dùng cho các
+            method khác trong controller
+            Tránh trùng lặp code.
+            Logic của Spring: tiết kiệm
+            mã nhất có thể;
+     **/
     @ModelAttribute("provinces")
     public Iterable<Province> listProvinces() {
         return provinceService.findAll();
     }
 
     @GetMapping
-    public ModelAndView listCustomer() {
+    /*TODO:
+         Bước 3: Cập nhật CustomerController
+        Phương thức listCustomer() bổ sung tham số
+        Pageable, được mapping tự động từ URL.
+    * */
+    public ModelAndView listCustomer(Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("/customer/list");
         Iterable<Customer> customers = customerService.findAll();
         modelAndView.addObject("customers", customers);
@@ -77,5 +90,19 @@ public class CustomerController {
         customerService.remove(id);
         redirect.addFlashAttribute("message", "Delete customer successfully");
         return "redirect:/customers";
+    }
+
+    
+    @PostMapping ("/search")
+    public ModelAndView listCustomers(@RequestParam("search") Optional<String> search, Pageable pageable) {
+        Page<Customer> customers;
+        if (search.isPresent()) {
+            customers = customerService.findAllByFirstNameContaining(pageable, search.get());
+        } else {
+            customers = customerService.findAll(pageable);
+        }
+        ModelAndView modelAndView = new ModelAndView("/customer/list");
+        modelAndView.addObject("customers", customers);
+        return modelAndView;
     }
 }
